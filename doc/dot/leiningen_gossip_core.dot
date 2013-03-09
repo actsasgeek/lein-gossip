@@ -1,0 +1,8 @@
+digraph g {
+subgraph cluster1 {
+label="leiningen.gossip.core"
+G0 [shape=ellipse,style=bold,label="gossip-about"];
+G1 [shape=box,label="leiningen.gossip.callgraphing\n\ngenerate-dot-files-from-clj-files"];
+}
+G0->G1 [penwidth=3,style=dashed];
+}

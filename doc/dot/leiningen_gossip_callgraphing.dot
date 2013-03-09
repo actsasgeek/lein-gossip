@@ -1,0 +1,56 @@
+digraph g {
+subgraph cluster1 {
+label="leiningen.gossip.callgraphing"
+G0 [shape=ellipse,style=bold,label="clj-to-dot"];
+G1 [shape=ellipse,style=bold,label="select-calls-for-each-def"];
+G2 [shape=ellipse,style=bold,label="select-calls-in-def"];
+G3 [shape=box,label="clojure.java.io\n\nfile"];
+G4 [shape=ellipse,style=bold,label="create-required-namespace-lookup"];
+G5 [shape=ellipse,style=bold,label="walk-directory"];
+G6 [shape=ellipse,style=bold,label="create-used-namespace-lookup"];
+G7 [shape=ellipse,style=bold,label="process-required-namespace"];
+G8 [shape=ellipse,style=bold,label="clj-to-data"];
+G9 [shape=ellipse,style=bold,label="q"];
+G10 [shape=ellipse,style=bold,label="select-defs-and-calls"];
+G11 [shape=ellipse,style=bold,label="style"];
+G12 [shape=ellipse,style=bold,label="identify-distinct-names-called"];
+G13 [shape=ellipse,style=bold,label="edge-to-string"];
+G14 [shape=ellipse,style=bold,label="extract-def-names"];
+G15 [shape=ellipse,style=bold,label="parse-namespace-qualified-function"];
+G16 [shape=ellipse,style=bold,label="select-ns"];
+G17 [shape=ellipse,style=bold,label="node-to-string"];
+G18 [shape=box,label="clojure.set\n\nmap-invert"];
+G19 [shape=ellipse,style=bold,label="generate-dot-files-from-clj-files"];
+G20 [shape=box,label="clojure.string\n\njoin"];
+G21 [shape=ellipse,style=bold,label="*formatting*"];
+G22 [shape=ellipse,style=bold,label="select-defs"];
+}
+G0->G8 [penwidth=3];
+G0->G16 [penwidth=3];
+G0->G10 [penwidth=3];
+G0->G18 [penwidth=3,style=dashed];
+G0->G17 [penwidth=3];
+G0->G12 [penwidth=3];
+G0->G13 [penwidth=3];
+G1->G2 [penwidth=3];
+G2->G15 [penwidth=3];
+G17->G9 [penwidth=3];
+G17->G20 [penwidth=3,style=dashed];
+G17->G11 [penwidth=3];
+G19->G3 [penwidth=3,style=dashed];
+G19->G5 [penwidth=3];
+G19->G0 [penwidth=3];
+G10->G16 [penwidth=3];
+G10->G22 [penwidth=3];
+G10->G14 [penwidth=3];
+G10->G6 [penwidth=3];
+G10->G4 [penwidth=3];
+G10->G1 [penwidth=3];
+G11->G11 [penwidth=3];
+G11->G21 [penwidth=3];
+G11->G20 [penwidth=3,style=dashed];
+G8->G3 [penwidth=3,style=dashed];
+G13->G11 [penwidth=3];
+G4->G7 [penwidth=3];
+G5->G3 [penwidth=3,style=dashed];
+}

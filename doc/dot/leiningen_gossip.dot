@@ -1,0 +1,22 @@
+digraph g {
+subgraph cluster1 {
+label="leiningen.gossip"
+G0 [shape=ellipse,style=bold,label="get-parameter-with-cascading-defaults"];
+G1 [shape=ellipse,style=bold,label="extract-source-dir"];
+G2 [shape=ellipse,style=bold,label="extract-target-dir"];
+G3 [shape=ellipse,style=bold,label="confirm-dir-exists"];
+G4 [shape=ellipse,style=bold,label="create-dir!"];
+G5 [shape=ellipse,style=bold,label="gossip"];
+G6 [shape=box,label="clojure.java.io\n\nfile"];
+G7 [shape=box,label="leiningen.gossip.core\n\ngossip-about"];
+}
+G1->G0 [penwidth=3];
+G2->G0 [penwidth=3];
+G3->G6 [penwidth=3,style=dotted];
+G4->G6 [penwidth=3,style=dotted];
+G5->G1 [penwidth=3];
+G5->G2 [penwidth=3];
+G5->G4 [penwidth=3];
+G5->G3 [penwidth=3];
+G5->G7 [penwidth=3,style=dashed];
+}
