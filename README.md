@@ -1,6 +1,6 @@
 # lein-gossip
 
-![leiningen\_gossip.clj](doc/dot/leiningen_gossip.clj)
+![leiningen\_gossip.clj](doc/dot/leiningen_gossip.png)
 
 Gossip is a lein tool to generate call-graphs for Clojure code.
 
