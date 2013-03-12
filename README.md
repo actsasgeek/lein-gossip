@@ -1,5 +1,7 @@
 # lein-gossip
 
+![leiningen\_gossip.clj](doc/dot/leiningen_gossip.clj)
+
 Gossip is a lein tool to generate call-graphs for Clojure code.
 
 This is the first pass and works in a fairly naive way just by treating Clojure code
@@ -7,11 +9,12 @@ as data and looking for symbols. It currently doesn't work for Java imports and 
 a bit rough around the edges. It was originally written when I inherited a medium
 sized codebase written in Clojure and I had no idea what was going on where.
 
-Future Features
+Future Features (Not in any particular order)
 
 1. Show callers from other packages.
 2. Handle Java imports.
 3. Use an AST library for improved discovery.
+4. Use shapes and line types to indicate relationships.
 
 ## Important
 
@@ -20,7 +23,8 @@ tested a bit but not widely tested.
 
 USE AT YOUR OWN RISK
 
-It hasn't erased any of my projects yet but YMMV. Make a copy.
+It hasn't erased any of my projects yet (and I'm not sure how it could) but YMMV. But it does
+make a directory and create files so use prudcent caution. Make a copy.
 
 ## Installation
 
@@ -54,8 +58,16 @@ In your project, type:
 
     $ lein gossip
 
-The DOT files will be placed in project\_name/docs/dots and you can process them with GraphiViz
-or OmniGraffle.
+
+By default, Gossip looks in src for Clojure files but will use :source-paths. By default, DOT files
+will be placed in project\_name/doc/dot but you can specify a key-path of [:gossip :target] in  your 
+project.clj file and it will use that.
+
+You can process them with GraphiViz or OmniGraffle. Use:
+
+    dot -Tpng filename.dt -o filename.png
+
+where you can substitute a variety of formats for png and change the filename appropriately.
 
 ## License
 
