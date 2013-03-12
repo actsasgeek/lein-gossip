@@ -46,7 +46,7 @@
   (let [
    args-vec (vec args) ;; args is a list and not positional
    raw-args (extract-source-dir project args-vec)
-   srcs (if (seq? raw-args) raw-args [raw-args])
+   srcs (if (seq? raw-args) (vec raw-args) [raw-args])
   _ (println (str "Looking for Clojure files in " srcs))
    tar (extract-target-dir project args-vec)]
     (create-dir! tar)
