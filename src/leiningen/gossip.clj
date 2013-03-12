@@ -44,9 +44,11 @@
   exist or it will use [:gossip :target] in project.clj or the supplied value on the
   command line (second parameter)."
   (let [
-   srcs (extract-source-dir project args)
+   args-vec (vec args) ;; args is a list and not positional
+   raw-args (extract-source-dir project args-vec)
+   srcs (if (seq? raw-args) raw-args [raw-args])
   _ (println (str "Looking for Clojure files in " srcs))
-   tar (extract-target-dir project args)]
+   tar (extract-target-dir project args-vec)]
     (create-dir! tar)
     (doseq [src srcs]
       (if (confirm-dir-exists src)
