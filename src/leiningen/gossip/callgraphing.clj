@@ -1,31 +1,43 @@
 (ns leiningen.gossip.callgraphing
-  (:use 
-    [clojure.set :only [map-invert]]
-    [clojure.string :only [join]]
-    [clojure.java.io :only [file]]))
+  (:require [clojure.set :refer [map-invert]]
+            [clojure.string :refer [join]]
+            [clojure.java.io :as io])
+  (:import java.io.PushbackReader))
 
-(defn clj-to-data [file]
-"
-Specify the full path of the .clj file and it will slurp it up, wrap it
-in parentheses and apply read-string to it.
-"
-  (read-string (str "(" (slurp file) ")")))
+(defn read-all-forgivingly
+  "read clojure code, tolerating invalid tokens"
+  [pbr]
+  (let [form (try (read pbr)
+                  (catch Exception e
+                    (let [message (.getMessage e)]
+                      (if (= message "EOF while reading")
+                        ::eof
+                        (do (println (str "[reader error] " message))
+                            ::unreadable-form)))))]
+    (if (= form ::eof) nil
+        (lazy-seq (cons form (read-all-forgivingly pbr))))))
 
-(defn select-ns [code]
-"
-code is the .clj file that has been passed through the reader. This
-function returns the (ns ...) list.
-"
-  (first (filter #(= 'ns (first %)) code)))
+(defn clj-to-data
+  "Specify the full path of the .clj file and it will slurp it up, wrap it
+   in parentheses and apply read-string to it."
+  [file]
+  (with-open [rdr (java.io.PushbackReader. (io/reader file))]
+    (vec (read-all-forgivingly rdr))))
 
-(defn select-defs [code]
-"
-code is a .clj file that has been passed through the reader. This
-function returns all of the (defn ...) lists. Right now it only finds
-defns.
-"
-  (filter #(contains? #{'defn 'def 'defn- 'defmulti 'defmethod} (first %)) code))
+(defn select-ns
+  "code is the .clj file that has been passed through the reader. This
+   function returns the (ns ...) list."
+  [code]
+  (first (filter #(and (coll? %) (= 'ns (first %))) code)))
 
+(defn select-defs
+  "code is a .clj file that has been passed through the reader. This
+   function returns all of the (defn ...) lists. Right now it only finds
+   defns."
+  [code]
+  (filter #(and (coll? %)
+                (contains? #{'defn 'def 'defn- 'defmulti 'defmethod} (first %)))
+          code))
 
 (defn extract-def-names [defs]
 "
@@ -203,7 +215,7 @@ Return value is a map {f1 ns1, f2 ns1, f3 ns2, ... }
 ;; http://rosettacode.org/wiki/Walk_a_directory/Recursively#Clojure
 (defn walk-directory [dirpath pattern]
   (doall (filter #(re-matches pattern (.getName %))
-    (file-seq (file dirpath)))))
+    (file-seq (io/file dirpath)))))
 
 (defn generate-dot-files-from-clj-files [src-dir tar-dir]
   (doseq [file (walk-directory src-dir #".*\.clj")]
