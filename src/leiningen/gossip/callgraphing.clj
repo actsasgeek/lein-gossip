@@ -91,7 +91,7 @@ Return value is a map {f1 ns1, f2 ns1, f3 ns2, ... }
     uses (rest use-expression)]
       (if (or (empty? uses) (not (vector? (first uses))))
         {}
-        (into {} (mapcat #(if (= 1 (count %)) () (map (fn [used-fn] [used-fn (% 0)]) (% 2))) uses)))))
+        (into {} (mapcat #(if (not (seq? %)) () (map (fn [used-fn] [used-fn (% 0)]) (% 2))) uses)))))
 
 (defn parse-namespace-qualified-function [required-ns-lookup symbol-name]
   (let [
