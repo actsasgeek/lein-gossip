@@ -56,9 +56,12 @@ Because any function in that namespace will appear as namespace/f or abbreviatio
 in the code, we want to create a mapping between abbrevations and namespaces. This function
 assists with this by returning [namespace namespace] or [abbreviation namespace].
 "
-  (if (= 3 (count namespace))
-    [(namespace 2) (namespace 0)]
-    [(namespace 0) (namespace 0)]))
+(if (seq? namespace)
+  (let [namespace (vec namespace)]
+    (if (= 3 (count namespace))
+      [(namespace 2) (namespace 0)]
+      [(namespace 0) (namespace 0)]))
+  [namespace namespace]))
 
 (defn create-required-namespace-lookup [namespace]
 "
