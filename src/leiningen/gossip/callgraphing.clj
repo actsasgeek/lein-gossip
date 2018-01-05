@@ -4,6 +4,11 @@
             [clojure.java.io :as io])
   (:import java.io.PushbackReader))
 
+(defn flatten-maps [x]
+  (if (coll? x)
+    (mapcat flatten-maps x)
+    [x]))
+
 (defn read-all-forgivingly
   "read clojure code, tolerating invalid tokens"
   [pbr]
@@ -102,7 +107,7 @@ Return value is a map {f1 ns1, f2 ns1, f3 ns2, ... }
 (defn select-calls-in-def [def-names used-ns-lookup required-ns-lookup def-expression]
   (let [head (str (first (rest def-expression)))]
     (loop [
-      body (flatten (rest (rest def-expression)))
+      body (flatten-maps (rest (rest def-expression)))
       so-far []]
         (if (empty? body)
           [{:type :defn :name head} (distinct (filter identity so-far))]
