@@ -21,8 +21,9 @@
   "Specify the full path of the .clj file and it will slurp it up, wrap it
    in parentheses and apply read-string to it."
   [file]
-  (with-open [rdr (java.io.PushbackReader. (io/reader file))]
-    (vec (read-all-forgivingly rdr))))
+  (binding [*data-readers* (conj *data-readers* {'js identity})]
+    (with-open [rdr (java.io.PushbackReader. (io/reader file))]
+      (vec (read-all-forgivingly rdr)))))
 
 (defn select-ns
   "code is the .clj file that has been passed through the reader. This
@@ -221,7 +222,7 @@ Return value is a map {f1 ns1, f2 ns1, f3 ns2, ... }
     (file-seq (io/file dirpath)))))
 
 (defn generate-dot-files-from-clj-files [src-dir tar-dir]
-  (doseq [file (walk-directory src-dir #".*\.clj")]
+  (doseq [file (walk-directory src-dir #".*\.cljs?")]
     (let [
       _ (println (.getPath file))
       [namespace dot] (clj-to-dot file)
